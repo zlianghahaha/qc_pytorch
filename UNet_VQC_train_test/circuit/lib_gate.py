@@ -65,11 +65,11 @@ class ExtendGate():
         circ.swap(q1,q2)
         return circ
     def my_decompose_cccz(cls, circ, q1, q2, q3, q4, aux1, aux2):
-        fwd_ccx(q1, q2, aux1)
-        fwd_ccx(q3, aux1, aux2)
-        my_decompose_cz(aux2, q4)
-        bwd_ccx1(q3, aux1, aux2)
-        bwd_ccx2(q1, q2, aux1)
+        cls.fwd_ccx(q1, q2, aux1)
+        cls.fwd_ccx(q3, aux1, aux2)
+        cls.my_decompose_cz(aux2, q4)
+        cls.bwd_ccx1(q3, aux1, aux2)
+        cls.bwd_ccx2(q1, q2, aux1)
         return circ
     @classmethod
     def ccz(cls,circ, q1, q2, q3, aux1):
@@ -93,7 +93,7 @@ class ExtendGate():
         circ.t(q2)
         circ.t(q3)
         circ.h(q3)
-        zero_bridge(circ,q1, q2, q3)
+        cls.zero_bridge(circ,q1, q2, q3)
         circ.cx(q1, q2)
         circ.t(q1)
         circ.tdg(q2)
@@ -183,11 +183,11 @@ class ExtendGate():
             if state[idx]=='0':
                 circ.x(qubits[idx])
 
-@classmethod
+    @classmethod
     def my_decompose_ccz(cls, circ, q1, q2, q3, aux1):
-        fwd_ccx(circ, q1, q2, aux1)
-        my_decompose_cz(circ, aux1, q3)
-        bwd_ccx2(circ, q1, q2, aux1)
+        cls.fwd_ccx(circ, q1, q2, aux1)
+        cls.my_decompose_cz(circ, aux1, q3)
+        cls.bwd_ccx2(circ, q1, q2, aux1)
         return circ
 
     @classmethod
@@ -204,7 +204,7 @@ class ExtendGate():
         circ.t(q2)
         circ.t(q3)
         circ.h(q3)
-        ori_bridge(circ, q1, q2, q3)
+        cls.ori_bridge(circ, q1, q2, q3)
         circ.cx(q1, q2)
         circ.t(q1)
         circ.tdg(q2)
