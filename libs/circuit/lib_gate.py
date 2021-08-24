@@ -64,6 +64,7 @@ class ExtendGate():
         circ.cz(q1, q2)
         circ.swap(q1,q2)
         return circ
+    @classmethod
     def my_decompose_cccz(cls, circ, q1, q2, q3, q4, aux1, aux2):
         cls.fwd_ccx(q1, q2, aux1)
         cls.fwd_ccx(q3, aux1, aux2)
