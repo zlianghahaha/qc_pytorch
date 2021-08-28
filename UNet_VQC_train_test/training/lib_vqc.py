@@ -266,6 +266,8 @@ class VClassicCircuitMatrix:
     def get_parameter_number(self,vqc_name):
         if vqc_name == 'vqc_10':
             return int(2*self.n_qubits)
+        elif vqc_name == 'vqc_5':
+            return int(7*self.n_qubits)
 
 
 #vqc 必须要显式进行p2a
