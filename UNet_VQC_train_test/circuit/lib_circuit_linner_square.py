@@ -55,7 +55,26 @@ class LinnerCircuit(BaseCircuit):
     @abc.abstractclassmethod
     def extract_from_weight(weight):
         pass
-
+    def add_weight1(self,circuit,weight,in_qubits, data_matrix = None,aux = []):
+        for i in range(self.n_repeats):
+            n_q_gates,n_idx = self.extract_from_weight(weight[i])
+            if data_matrix != None and n_idx != None:
+                circuit.append(UnitaryGate(data_matrix[n_idx], label="Input"), in_qubits[i][0:self.n_qubits])
+            qbits = in_qubits[i]
+            for gate in n_q_gates:
+                z_count = gate.count("1")
+                # z_pos = get_index_list(gate,"1")
+                z_pos = self.get_index_list(gate[::-1],"1")
+                if z_count==1:
+                    circuit.z(qbits[z_pos[0]])
+                elif z_count==2:
+                    circuit.cz(qbits[z_pos[0]],qbits[z_pos[1]])
+                elif z_count==3:
+                    ExtendGate.ccz(circuit,qbits[z_pos[0]],qbits[z_pos[1]],qbits[z_pos[2]],aux[i])
+                elif z_count==4:
+                    ExtendGate.cccz(circuit,qbits[z_pos[0]],qbits[z_pos[1]],qbits[z_pos[2]],qbits[z_pos[3]],aux[0],aux[1])
+        circuit.barrier()
+    
     def add_weight(self,circuit,weight,in_qubits, data_matrix = None,aux = []):
         for i in range(self.n_repeats):
             n_q_gates,n_idx = self.extract_from_weight(weight[i])
@@ -69,9 +88,9 @@ class LinnerCircuit(BaseCircuit):
                 if z_count==1:
                     circuit.z(qbits[z_pos[0]])
                 elif z_count==2:
-                    ExtendGate.my_decompose_cz(circuit,qbits[z_pos[0]],qbits[z_pos[1]])
+                    circuit.cz(qbits[z_pos[0]],qbits[z_pos[1]])
                 elif z_count==3:
-                    ExtendGate.my_decompose_ccz(circuit,qbits[z_pos[0]],qbits[z_pos[1]],qbits[z_pos[2]],aux[0])
+                    ExtendGate.my_decompose_ccz(circuit,qbits[z_pos[0]],qbits[z_pos[1]],qbits[z_pos[2]],aux[i])
                 elif z_count==4:
                     ExtendGate.my_decompose_cccz(circuit,qbits[z_pos[0]],qbits[z_pos[1]],qbits[z_pos[2]],qbits[z_pos[3]],aux[0],aux[1])
         circuit.barrier()
