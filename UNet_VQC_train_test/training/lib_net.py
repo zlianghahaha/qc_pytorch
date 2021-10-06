@@ -10,7 +10,7 @@ from lib_utils import *
 
 ## Define the NN architecture
 class Net(nn.Module):
-    def __init__(self,img_size,layers,training,binary,debug="False"):
+    def __init__(self,img_size,layers,training,binary,given_ang,train_ang,debug="False"):
         super(Net, self).__init__()
 
         self.in_size = img_size*img_size
@@ -41,6 +41,7 @@ class Net(nn.Module):
             elif layers[idx][0]=='v5':
                 setattr(self, fc_name, VQC_Net(loop_in_size, layers[idx][1],'vqc_5'))
             elif layers[idx][0]=='n':
+                setattr(self, fc_name, QC_Norm_try3(num_features=layers[idx][1], init_ang_inc=given_ang[idx], training=train_ang))
                 setattr(self, fc_name, QC_Norm_Correction_try2(num_features=layers[idx][1]))
             else:
                 print("Not support layer name!")

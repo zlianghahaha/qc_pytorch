@@ -96,9 +96,9 @@ class ExtendGate():
         idx = 0
         # The index of qubits are reversed in terms of states.
         # As shown in the above example: we put X at q2 not the third position.
-        print("state 1",state)
+        # print("state 1",state)
         state = state[::-1]
-        print("state 2",state)
+        # print("state 2",state)
         for idx in range(len(state)):
             if state[idx]=='0':
                 circ.x(qubits[idx])

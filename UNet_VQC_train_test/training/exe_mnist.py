@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument('-j','--num_workers', default="0", help="worker to load data", )
     parser.add_argument('-tb','--batch_size', default="64", help="training batch size", )
     parser.add_argument('-ib','--inference_batch_size', default="32", help="inference batch size", )
-    parser.add_argument('-nn','--neural_in_layers', default="u:4,n:4,p2a:16,v10:16,v10:2", help="QNN structrue :<layer1 name: output_number;layer2 name:output_number...>", )
+    parser.add_argument('-nn','--neural_in_layers', default="u:4,p:2", help="QNN structrue :<layer1 name: output_number;layer2 name:output_number...>", )
 
     parser.add_argument('-l','--init_lr', default="0.001", help="PNN learning rate", )
     parser.add_argument('-m','--milestones', default="5, 7, 9", help="Training milestone", )
@@ -42,7 +42,8 @@ def parse_args():
 
     # QC related
     #parser.add_argument('-wn', "--with_norm", default=False ,help="Using Batchnorm", action="store_true", )
-
+    parser.add_argument('-qa',"--given_ang", default="1 -1 1 -1, -1 -1",  help="ang amplify, the same size with --neural_in_layers",)
+    parser.add_argument('-qt',"--train_ang", help="train anglee", action="store_true", )
 
 
     # File
@@ -161,6 +162,8 @@ if __name__ == "__main__":
     num_workers = int(args.num_workers)
     batch_size = int(args.batch_size)
     inference_batch_size = int(args.inference_batch_size)
+    given_ang = [[int(y) for y in x.strip().split(" ")] for x in args.given_ang.split(",")]
+    train_ang = args.train_ang
     layers =[]
 
     for item1 in args.neural_in_layers.split(","):
@@ -213,7 +216,7 @@ if __name__ == "__main__":
 
     train_loader, test_loader = load_data(interest_class,datapath,isppd,img_size,batch_size,inference_batch_size,num_workers)
     criterion = nn.CrossEntropyLoss()
-    model = Net(img_size,layers,training,binary,debug)
+    model = Net(img_size,layers,training,binary,given_ang,train_ang,debug)
     model = model.to(device)
 
     print(device)
